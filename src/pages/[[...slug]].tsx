@@ -6,7 +6,6 @@ import Zoom from '@mui/material/Zoom'
 import { styled } from '@mui/material/styles'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import * as mock from '@/_mock'
 import ChatView from '@/components/ChatView'
 import Chats from '@/components/Chats'
 import Contacts from '@/components/Contacts'
@@ -90,8 +89,18 @@ const Home: NextPage = () => {
   }, [conversations, contacts, slug])
 
   useEffect(() => {
-    dispatch(conversationsSlice.actions.onLoad(mock.conversations))
-    dispatch(contactsSlice.actions.onLoad(mock.contacts))
+    const getContacts = async () => {
+      const mock = await import('@/_mock')
+      dispatch(contactsSlice.actions.onLoad(mock.contacts))
+    }
+
+    const getConversations = async () => {
+      const mock = await import('@/_mock')
+      dispatch(conversationsSlice.actions.onLoad(mock.conversations))
+    }
+
+    getContacts()
+    getConversations()
   }, [dispatch])
 
   const handleOpenSettings = () => {
