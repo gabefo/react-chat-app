@@ -134,6 +134,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
                   theme.palette.mode === 'light'
                     ? alpha(theme.palette.common.black, 0.06)
                     : alpha(theme.palette.common.white, 0.09),
+                userSelect: 'none',
               }}
             >
               <Box sx={{ display: 'inline-flex', p: 1, ml: -1.5 }}>
