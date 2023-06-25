@@ -100,12 +100,6 @@ export default function ChatInput({ onSend }: ChatInputProps) {
             </IconButton>
             <IconButton onClick={handleAttach}>
               <AddPhotoAlternateOutlinedIcon />
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png, image/jpeg"
-                style={{ display: 'none' }}
-              />
             </IconButton>
             <StyledInput
               autoFocus
@@ -116,16 +110,37 @@ export default function ChatInput({ onSend }: ChatInputProps) {
               onKeyDown={handleKeyDown}
               placeholder="Text message"
             />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png, image/jpeg"
+              style={{ display: 'none' }}
+            />
           </>
         ) : (
           <>
-            <Box sx={{ display: 'inline-flex', ml: -0.5, mr: 1 }}>
-              <MicIcon color="error" />
-            </Box>
-            <Typography sx={{ flexGrow: 1 }}>{formatDuration(recordingTime)}</Typography>
-            <IconButton onClick={stopRecording}>
+            <IconButton edge="start" onClick={stopRecording}>
               <DeleteIcon />
             </IconButton>
+            <Stack
+              direction="row"
+              alignItems="center"
+              sx={{
+                flex: 1,
+                px: 2,
+                mx: 1,
+                borderRadius: '20px',
+                bgcolor: (theme) =>
+                  theme.palette.mode === 'light'
+                    ? alpha(theme.palette.common.black, 0.06)
+                    : alpha(theme.palette.common.white, 0.09),
+              }}
+            >
+              <Box sx={{ display: 'inline-flex', p: 1, ml: -1.5 }}>
+                <MicIcon color="error" />
+              </Box>
+              <Typography sx={{ flexGrow: 1 }}>{formatDuration(recordingTime)}</Typography>
+            </Stack>
           </>
         )}
         <IconButton
