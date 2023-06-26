@@ -1,15 +1,7 @@
-import { ReactNode } from 'react'
-import CssBaseline from '@mui/material/CssBaseline'
 import { grey } from '@mui/material/colors'
-import {
-  ThemeProvider as MuiThemeProvider,
-  ThemeOptions,
-  alpha,
-  createTheme,
-  lighten,
-} from '@mui/material/styles'
+import { experimental_extendTheme as extendTheme, lighten } from '@mui/material/styles'
 import { Roboto } from 'next/font/google'
-import useColorScheme from './hooks/useColorScheme'
+import type {} from '@mui/material/themeCssVarsAugmentation'
 
 export const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -18,7 +10,25 @@ export const roboto = Roboto({
   fallback: ['Helvetica', 'Arial', 'sans-serif'],
 })
 
-const options: ThemeOptions = {
+const theme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        background: {
+          default: grey[300],
+          paper: grey[300],
+        },
+      },
+    },
+    dark: {
+      palette: {
+        background: {
+          default: '#1a1c1e',
+          paper: '#1a1c1e',
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: roboto.style.fontFamily,
   },
@@ -45,7 +55,7 @@ const options: ThemeOptions = {
           backgroundColor: 'transparent',
         },
         '::-webkit-scrollbar-thumb': {
-          backgroundColor: theme.palette.action.disabled,
+          backgroundColor: theme.vars.palette.action.disabled,
           borderRadius: 2,
         },
       }),
@@ -58,7 +68,7 @@ const options: ThemeOptions = {
       },
       styleOverrides: {
         colorDefault: ({ theme }) => ({
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.vars.palette.background.paper,
         }),
         colorInherit: {
           backgroundColor: 'inherit',
@@ -91,11 +101,11 @@ const options: ThemeOptions = {
       },
       styleOverrides: {
         root: ({ theme }) => ({
-          backgroundColor: lighten(
-            theme.palette.background.paper,
-            theme.palette.mode === 'light' ? 0.48 : 0.05
-          ),
+          backgroundColor: lighten(theme.colorSchemes.light.palette.background.paper, 0.48),
           borderRadius: theme.shape.borderRadius * 3,
+          [theme.getColorSchemeSelector('dark')]: {
+            backgroundColor: lighten(theme.colorSchemes.dark.palette.background.paper, 0.05),
+          },
         }),
       },
     },
@@ -151,17 +161,14 @@ const options: ThemeOptions = {
     MuiListItemButton: {
       styleOverrides: {
         root: ({ theme }) => ({
-          ...(theme.palette.mode === 'dark' && {
+          [theme.getColorSchemeSelector('dark')]: {
             '&.Mui-selected': {
-              backgroundColor: theme.palette.action.selected,
+              backgroundColor: theme.vars.palette.action.selected,
               '&:hover': {
-                backgroundColor: alpha(
-                  theme.palette.common.white,
-                  theme.palette.action.activatedOpacity
-                ),
+                backgroundColor: `rgba(255 255 255 / ${theme.vars.palette.action.activatedOpacity})`,
               },
             },
-          }),
+          },
         }),
       },
     },
@@ -180,43 +187,6 @@ const options: ThemeOptions = {
       },
     },
   },
-}
-
-const theme = createTheme({
-  ...options,
-  palette: {
-    mode: 'light',
-    background: {
-      default: grey[300],
-      paper: grey[300],
-    },
-  },
 })
 
 export default theme
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    background: {
-      default: '#1a1c1e',
-      paper: '#1a1c1e',
-    },
-  },
-  ...options,
-})
-
-interface ThemeProviderProps {
-  children?: ReactNode
-}
-
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  const { mode } = useColorScheme()
-
-  return (
-    <MuiThemeProvider theme={mode === 'dark' ? darkTheme : theme}>
-      <CssBaseline />
-      {children}
-    </MuiThemeProvider>
-  )
-}

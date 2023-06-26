@@ -7,8 +7,6 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { blue } from '@mui/material/colors'
-import { alpha } from '@mui/material/styles'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import Moment from 'react-moment'
 import { IMessage, MessageType } from '@/interfaces'
@@ -47,25 +45,26 @@ export default function ChatMessageListItem({
         }}
       >
         <Box
-          sx={{
+          data-mui-color-scheme="light"
+          sx={(theme) => ({
             position: 'relative',
             minHeight: 40,
             borderRadius: 5,
             overflow: 'hidden',
             ...(isSentByMe
               ? {
-                  bgcolor: blue[700],
-                  color: '#fff',
+                  bgcolor: theme.vars.palette.primary.main,
+                  color: theme.vars.palette.primary.contrastText,
                   transformOrigin: '100% 0 0',
                 }
               : {
-                  bgcolor: (theme) =>
-                    theme.palette.mode === 'light'
-                      ? alpha(theme.palette.common.black, 0.08)
-                      : alpha(theme.palette.common.white, 0.16),
+                  bgcolor: 'rgba(0 0 0 / 0.08)',
                   transformOrigin: '0 0 0',
+                  [theme.getColorSchemeSelector('dark')]: {
+                    bgcolor: 'rgba(255 255 255 / 0.16)',
+                  },
                 }),
-          }}
+          })}
           onClick={toggleShowDetails}
         >
           {renderContent(message)}

@@ -12,9 +12,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     height: 22,
     borderRadius: '50%',
     padding: 0,
-    backgroundColor: theme.palette.primary.main,
-    border: `2px solid ${theme.palette.background.paper}`,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.vars.palette.primary.main,
+    border: `2px solid ${theme.vars.palette.background.paper}`,
+    color: theme.vars.palette.primary.contrastText,
     fontSize: 18,
   },
 }))

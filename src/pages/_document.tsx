@@ -1,5 +1,6 @@
 import * as React from 'react'
 import createEmotionServer from '@emotion/server/create-instance'
+import { getInitColorSchemeScript } from '@mui/material/styles'
 import { AppType } from 'next/app'
 import Document, {
   Html,
@@ -22,12 +23,13 @@ export default function MyDocument({ emotionStyleTags }: MyDocumentProps) {
     <Html lang="en" className={roboto.className}>
       <Head>
         {/* PWA primary color */}
-        <meta name="theme-color" content={theme.palette.primary.main} />
+        <meta name="theme-color" content={theme.colorSchemes.light.palette.primary.main} />
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="emotion-insertion-point" content="" />
         {emotionStyleTags}
       </Head>
       <body>
+        {getInitColorSchemeScript({ defaultMode: 'system' })}
         <Main />
         <NextScript />
       </body>

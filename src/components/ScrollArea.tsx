@@ -25,7 +25,7 @@ const ScrollAreaScrollbar = styled(ScrollAreaPrimitive.Scrollbar)({
 
 const ScrollAreaThumb = styled(ScrollAreaPrimitive.Thumb)(({ theme }) => ({
   flex: 1,
-  backgroundColor: theme.palette.action.disabled,
+  backgroundColor: theme.vars.palette.action.disabled,
   position: 'relative',
   '&::before': {
     content: '""',

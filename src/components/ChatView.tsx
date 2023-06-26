@@ -31,18 +31,18 @@ const Main = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   position: 'fixed',
   inset: 0,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.vars.palette.background.paper,
   overflow: 'hidden',
   zIndex: theme.zIndex.drawer,
   [theme.breakpoints.up('md')]: {
     position: 'relative',
     flexGrow: 1,
     margin: theme.spacing(2, 0),
-    backgroundColor: darken(
-      theme.palette.background.paper,
-      theme.palette.mode === 'light' ? 0.05 : 0.12
-    ),
+    backgroundColor: darken(theme.colorSchemes.light.palette.background.paper, 0.05),
     borderRadius: theme.shape.borderRadius * 6,
+    [theme.getColorSchemeSelector('dark')]: {
+      backgroundColor: darken(theme.colorSchemes.dark.palette.background.paper, 0.12),
+    },
   },
 }))
 

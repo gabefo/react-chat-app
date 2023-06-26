@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack'
 import Switch from '@mui/material/Switch'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import useColorScheme from '@/hooks/useColorScheme'
+import { useColorScheme } from '@mui/material/styles'
 import ProfilePhoto from './ProfilePhoto'
 import ScrollArea from './ScrollArea'
 
@@ -22,7 +22,13 @@ interface SettingsProps {
 }
 
 export default function Settings({ onClose }: SettingsProps) {
-  const { mode, toggleMode } = useColorScheme()
+  const { mode, systemMode, setMode } = useColorScheme()
+
+  const resolvedMode = mode === 'system' ? systemMode : mode
+
+  const toggleMode = () => {
+    setMode(resolvedMode === 'light' ? 'dark' : 'light')
+  }
 
   return (
     <>
@@ -49,7 +55,7 @@ export default function Settings({ onClose }: SettingsProps) {
                   <ListItemText id="switch-list-label-dark-mode" primary="Dark mode" />
                   <Switch
                     edge="end"
-                    checked={mode === 'dark'}
+                    checked={resolvedMode === 'dark'}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{
