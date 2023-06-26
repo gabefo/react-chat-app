@@ -11,6 +11,8 @@
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.0",
     "@emotion/server": "^11.11.0",
@@ -19,6 +21,7 @@
     "@mui/material": "^5.13.3",
     "@radix-ui/react-scroll-area": "^1.0.4",
     "@reduxjs/toolkit": "^1.9.5",
+    "emoji-mart": "^5.5.2",
     "framer-motion": "^10.12.16",
     "material-ui-confirm": "^3.0.9",
     "material-ui-popup-state": "^5.0.9",
