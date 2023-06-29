@@ -20,7 +20,7 @@ import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import { IContact } from '@/interfaces'
 import ImageViewer from './ImageViewer'
-import ScrollArea from './ScrollArea'
+import TextEmoji from './TextEmoji'
 
 interface ContactInfoProps {
   contact: IContact
@@ -32,110 +32,108 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
   const confirm = useConfirm()
 
   return (
-    <ScrollArea>
-      <Container sx={{ pb: 3 }}>
-        <Stack alignItems="center" gap={2} sx={{ mb: 3 }}>
-          <ImageViewer title={displayName} src={profilePhoto} />
-          <Typography variant="h5">{displayName}</Typography>
-          <Stack direction="row">
-            <IconButton color="primary" size="large">
-              <CallIcon fontSize="large" />
-            </IconButton>
-            <IconButton color="primary" size="large">
-              <VideocamIcon fontSize="large" />
-            </IconButton>
-          </Stack>
+    <Container sx={{ pb: 3 }}>
+      <Stack alignItems="center" gap={2} sx={{ mb: 3 }}>
+        <ImageViewer title={displayName} src={profilePhoto} />
+        <Typography variant="h5">{displayName}</Typography>
+        <Stack direction="row">
+          <IconButton color="primary" size="large">
+            <CallIcon fontSize="large" />
+          </IconButton>
+          <IconButton color="primary" size="large">
+            <VideocamIcon fontSize="large" />
+          </IconButton>
         </Stack>
-        <Card sx={{ mb: 1 }}>
-          <List disablePadding>
-            <ListItem>
+      </Stack>
+      <Card sx={{ mb: 1 }}>
+        <List disablePadding>
+          <ListItem>
+            <ListItemIcon>
+              <InfoOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={<TextEmoji>{about}</TextEmoji>}
+              secondary="About"
+              sx={{ display: 'flex', flexDirection: 'column-reverse' }}
+            />
+          </ListItem>
+        </List>
+      </Card>
+      <Card>
+        <List disablePadding>
+          <ListItem disablePadding>
+            <ListItemButton>
               <ListItemIcon>
-                <InfoOutlinedIcon />
+                <NotificationsIcon />
               </ListItemIcon>
               <ListItemText
-                primary={about}
-                secondary="About"
-                sx={{ display: 'flex', flexDirection: 'column-reverse' }}
+                id="switch-list-label-mute-notifications"
+                primary="Mute notifications"
               />
-            </ListItem>
-          </List>
-        </Card>
-        <Card>
-          <List disablePadding>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <NotificationsIcon />
-                </ListItemIcon>
-                <ListItemText
-                  id="switch-list-label-mute-notifications"
-                  primary="Mute notifications"
-                />
-                <Switch
-                  edge="end"
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{
-                    'aria-labelledby': 'switch-list-label-mute-notifications',
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <GroupIcon />
-                </ListItemIcon>
-                <ListItemText primary={`Create group with ${displayName}`} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={() => {
-                  confirm({
-                    title: `Block ${displayName}?`,
-                    confirmationText: 'Block',
-                  })
-                    .then(() => {
-                      enqueueSnackbar(`${displayName} blocked`)
-                    })
-                    .catch(() => {})
+              <Switch
+                edge="end"
+                tabIndex={-1}
+                disableRipple
+                inputProps={{
+                  'aria-labelledby': 'switch-list-label-mute-notifications',
                 }}
-              >
-                <ListItemIcon>
-                  <BlockIcon color="error" />
-                </ListItemIcon>
-                <ListItemText
-                  primary={`Block ${displayName}`}
-                  primaryTypographyProps={{ color: 'error' }}
-                />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={() => {
-                  confirm({
-                    title: `Report ${displayName}?`,
-                    confirmationText: 'Report',
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <GroupIcon />
+              </ListItemIcon>
+              <ListItemText primary={`Create group with ${displayName}`} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => {
+                confirm({
+                  title: `Block ${displayName}?`,
+                  confirmationText: 'Block',
+                })
+                  .then(() => {
+                    enqueueSnackbar(`${displayName} blocked`)
                   })
-                    .then(() => {
-                      enqueueSnackbar(`${displayName} reported`)
-                    })
-                    .catch(() => {})
-                }}
-              >
-                <ListItemIcon>
-                  <ReportIcon color="error" />
-                </ListItemIcon>
-                <ListItemText
-                  primary={`Report ${displayName}`}
-                  primaryTypographyProps={{ color: 'error' }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Card>
-      </Container>
-    </ScrollArea>
+                  .catch(() => {})
+              }}
+            >
+              <ListItemIcon>
+                <BlockIcon color="error" />
+              </ListItemIcon>
+              <ListItemText
+                primary={`Block ${displayName}`}
+                primaryTypographyProps={{ color: 'error' }}
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => {
+                confirm({
+                  title: `Report ${displayName}?`,
+                  confirmationText: 'Report',
+                })
+                  .then(() => {
+                    enqueueSnackbar(`${displayName} reported`)
+                  })
+                  .catch(() => {})
+              }}
+            >
+              <ListItemIcon>
+                <ReportIcon color="error" />
+              </ListItemIcon>
+              <ListItemText
+                primary={`Report ${displayName}`}
+                primaryTypographyProps={{ color: 'error' }}
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Card>
+    </Container>
   )
 }

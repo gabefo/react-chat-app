@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import ChatIcon from '@mui/icons-material/Chat'
-import MuiDrawer from '@mui/material/Drawer'
+import MuiDrawer, { drawerClasses } from '@mui/material/Drawer'
 import Fab from '@mui/material/Fab'
 import Zoom from '@mui/material/Zoom'
 import { styled } from '@mui/material/styles'
 import { NextPage } from 'next'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import ChatView from '@/components/ChatView'
 import Chats from '@/components/Chats'
 import Contacts from '@/components/Contacts'
 import Intro from '@/components/Intro'
@@ -16,6 +16,8 @@ import TitleAndMetaTags from '@/components/TitleAndMetaTags'
 import { IConversation, IContact } from '@/interfaces'
 import { conversationsSlice, selectConversations, useDispatch, useSelector } from '@/lib/redux'
 import { contactsSlice, selectContacts } from '@/lib/redux/slices/contactsSlice'
+
+const ChatView = dynamic(() => import('@/components/ChatView'))
 
 const Root = styled('div')({
   position: 'relative',
@@ -37,7 +39,7 @@ const Drawer = styled(MuiDrawer)(({ theme }) => ({
   [theme.breakpoints.up('xl')]: {
     width: 480,
   },
-  '& .MuiDrawer-paper': {
+  [`& .${drawerClasses.paper}`]: {
     width: 'inherit',
     border: 0,
     overflow: 'hidden',

@@ -12,6 +12,7 @@ import { motion } from 'framer-motion'
 import { bindContextMenu, bindMenu, usePopupState } from 'material-ui-popup-state/hooks'
 import Moment from 'react-moment'
 import { IConversation, MessageType } from '@/interfaces'
+import TextEmoji from './TextEmoji'
 
 interface ConversationListItemProps {
   conversation: IConversation
@@ -31,6 +32,18 @@ export default function ConversationListItem({
   })
   const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null
 
+  let displayText = ''
+  if (lastMessage) {
+    if (lastMessage.isSentByMe) {
+      displayText += 'You: '
+    }
+    if (lastMessage.type === MessageType.VOICE) {
+      displayText += 'Audio'
+    } else {
+      displayText += lastMessage.content
+    }
+  }
+
   const handleClick = () => {
     onSelect(conversation)
   }
@@ -39,13 +52,11 @@ export default function ConversationListItem({
     <ListItem
       component={motion.li}
       layout
-      disablePadding
       sx={{
+        px: 1,
+        py: 0.25,
         bgcolor: 'background.paper',
         zIndex: active ? 1 : 0,
-        '&:not(:last-of-type)': {
-          mb: 0.5,
-        },
       }}
     >
       <ListItemButton
@@ -65,15 +76,7 @@ export default function ConversationListItem({
               fontWeight: 'medium',
             }),
           }}
-          secondary={
-            lastMessage && (
-              <>
-                {lastMessage.isSentByMe && 'You: '}
-                {lastMessage.type === MessageType.TEXT && lastMessage.content}
-                {lastMessage.type === MessageType.VOICE && 'Audio'}
-              </>
-            )
-          }
+          secondary={displayText && <TextEmoji>{displayText}</TextEmoji>}
           secondaryTypographyProps={{
             noWrap: true,
             ...(unreadCount > 0 && {

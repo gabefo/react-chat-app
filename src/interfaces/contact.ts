@@ -3,8 +3,8 @@ export interface IContact {
   username: string
   displayName: string
   profilePhoto?: string
-  about?: string
+  about: string
   isOnline: boolean
-  lastSeen?: string
+  lastSeen: string
   isBlocked: boolean
 }

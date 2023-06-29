@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchIcon from '@mui/icons-material/Search'
 import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -11,7 +12,6 @@ import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/ho
 import { IConversation } from '@/interfaces'
 import ConversationList from './ConversationList'
 import ListSkeleton from './ListSkeleton'
-import ScrollArea from './ScrollArea'
 import SearchBar from './SearchBar'
 
 interface ChatsProps {
@@ -80,7 +80,7 @@ export default function Chats({
         onChange={setSearchQuery}
         onClose={handleCloseSearchBar}
       />
-      <ScrollArea>
+      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         {loading ? (
           <ListSkeleton />
         ) : (
@@ -90,7 +90,7 @@ export default function Chats({
             onSelectConversation={onSelectConversation}
           />
         )}
-      </ScrollArea>
+      </Box>
     </>
   )
 }

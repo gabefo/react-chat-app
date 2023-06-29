@@ -18,5 +18,5 @@ function createRandomContact(): IContact {
 }
 
 export const contacts: IContact[] = faker.helpers
-  .multiple(createRandomContact, { count: 50 })
+  .multiple(createRandomContact, { count: 200 })
   .sort((a, b) => a.displayName.localeCompare(b.displayName))

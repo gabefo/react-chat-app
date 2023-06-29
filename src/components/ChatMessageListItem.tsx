@@ -11,6 +11,7 @@ import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/ho
 import Moment from 'react-moment'
 import { IMessage, MessageType } from '@/interfaces'
 import AudioPlayer from './AudioPlayer'
+import TextEmoji from './TextEmoji'
 
 interface ChatMessageListItemProps {
   message: IMessage
@@ -32,12 +33,14 @@ export default function ChatMessageListItem({
   }
 
   return (
-    <Stack alignItems={isSentByMe ? 'flex-end' : 'flex-start'}>
+    <Stack
+      alignItems={isSentByMe ? 'flex-end' : 'flex-start'}
+      sx={{ pt: margin === 'normal' ? 1.5 : 0.5 }}
+    >
       <Stack
         direction={isSentByMe ? 'row-reverse' : 'row'}
         alignItems="center"
         sx={{
-          mt: margin === 'normal' ? 1.5 : 0.5,
           maxWidth: { xs: '95%', md: '85%', lg: '75%', xl: '65%' },
           '&:hover .message-actions': {
             visibility: 'visible',
@@ -118,7 +121,7 @@ function renderContent({ type, content }: IMessage) {
       return (
         <Box sx={{ px: 1.5, py: 1.25 }}>
           <Typography variant="body2" sx={{ overflowWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-            {content}
+            <TextEmoji>{content}</TextEmoji>
           </Typography>
         </Box>
       )

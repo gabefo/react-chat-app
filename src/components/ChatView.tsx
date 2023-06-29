@@ -8,7 +8,7 @@ import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import ButtonBase from '@mui/material/ButtonBase'
-import MuiDrawer from '@mui/material/Drawer'
+import MuiDrawer, { drawerClasses } from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -60,7 +60,7 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
       width: 480,
     },
   }),
-  '& .MuiDrawer-paper': {
+  [`& .${drawerClasses.paper}`]: {
     width: '100%',
     border: 0,
     [theme.breakpoints.up('md')]: {
@@ -217,8 +217,9 @@ export default function ChatView({ conversation, onClose }: ChatViewProps) {
             </Menu>
           </Toolbar>
         </AppBar>
-        <Box sx={{ flexGrow: 1 }} />
-        <ChatMessageList messages={messages} onDeleteMessage={handleDeleteMessage} />
+        <Box sx={{ flexGrow: 1 }}>
+          <ChatMessageList messages={messages} onDeleteMessage={handleDeleteMessage} />
+        </Box>
         <ChatInput
           onSend={({ type, content }) => {
             dispatch(
@@ -239,7 +240,9 @@ export default function ChatView({ conversation, onClose }: ChatViewProps) {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <ContactInfo contact={recipient} />
+        <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+          <ContactInfo contact={recipient} />
+        </Box>
       </Drawer>
     </>
   )

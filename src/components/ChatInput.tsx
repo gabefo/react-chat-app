@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react'
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined'
@@ -47,37 +47,44 @@ export default function ChatInput({ onSend }: ChatInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { recordingState, recordingTime, startRecording, stopRecording } = useVoiceRecorder()
 
-  const toggleEmojiPicker = () => {
+  const toggleEmojiPicker = useCallback(() => {
     setShowEmojiPicker((prev) => !prev)
-  }
+  }, [])
 
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleEmojiSelect = useCallback((emoji: string) => {
+    setMessage((value) => value + emoji)
+  }, [])
+
+  const handleChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target
     setMessage(value)
-  }
+  }, [])
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter') {
-      if (!event.shiftKey || event.location === 4) {
-        event.preventDefault()
-        handleSend()
-      }
-    }
-  }
-
-  const handleSend = () => {
+  const handleSend = useCallback(() => {
     if (!isEmpty) {
       onSend({ type: MessageType.TEXT, content: message.trim() })
     }
 
     setMessage('')
-  }
+  }, [isEmpty, message, onSend])
 
-  const handleAttach = () => {
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === 'Enter') {
+        if (!event.shiftKey || event.location === 4) {
+          event.preventDefault()
+          handleSend()
+        }
+      }
+    },
+    [handleSend]
+  )
+
+  const handleAttach = useCallback(() => {
     fileInputRef.current?.click()
-  }
+  }, [])
 
-  const handleRecord = async () => {
+  const handleRecord = useCallback(async () => {
     if (recordingState === 'inactive') {
       startRecording()
       return
@@ -86,7 +93,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
     const blob = await stopRecording()
 
     onSend({ type: MessageType.VOICE, content: blob })
-  }
+  }, [onSend, recordingState, startRecording, stopRecording])
 
   return (
     <>
@@ -151,7 +158,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
           </IconButton>
         </Stack>
       </Container>
-      {showEmojiPicker && <EmojiPicker />}
+      {showEmojiPicker && <EmojiPicker onEmojiSelect={handleEmojiSelect} />}
     </>
   )
 }

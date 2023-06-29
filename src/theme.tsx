@@ -49,14 +49,52 @@ const theme = extendTheme({
           width: '100%',
           height: '100%',
         },
-        '::-webkit-scrollbar': {
-          width: 4,
-          height: 4,
+        '.emoji-button': {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          boxSizing: 'border-box',
+          WebkitTapHighlightColor: 'transparent',
           backgroundColor: 'transparent',
+          outline: 0,
+          border: 0,
+          margin: 0,
+          padding: 6,
+          cursor: 'pointer',
+          userSelect: 'none',
+          appearance: 'none',
+          overflow: 'hidden',
+          borderRadius: theme.vars.shape.borderRadius,
+          transition: theme.transitions.create('background-color', {
+            easing: theme.transitions.easing.easeInOut,
+            duration: theme.transitions.duration.shortest,
+          }),
+          '&:hover': {
+            backgroundColor: `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`,
+          },
+          '&.has-dropdown::after': {
+            content: '""',
+            position: 'absolute',
+            bottom: -2,
+            right: -2,
+            border: '4px solid transparent',
+            borderTopColor: theme.vars.palette.action.disabled,
+            transform: 'rotate(-45deg)',
+          },
         },
-        '::-webkit-scrollbar-thumb': {
-          backgroundColor: theme.vars.palette.action.disabled,
-          borderRadius: 2,
+        '@media (hover: hover) and (pointer: fine)': {
+          '*::-webkit-scrollbar': {
+            width: 4,
+            height: 4,
+            backgroundColor: 'transparent',
+          },
+          '*::-webkit-scrollbar-thumb': {
+            backgroundColor: 'transparent',
+          },
+          '*:hover::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.vars.palette.action.disabled,
+          },
         },
       }),
     },

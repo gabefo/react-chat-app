@@ -32,7 +32,7 @@ export default function MyApp(props: MyAppProps) {
         />
       </Head>
       <CssVarsProvider theme={theme} defaultMode="system">
-        <CssBaseline />
+        <CssBaseline enableColorScheme />
         <ReduxProvider store={store}>
           <ConfirmProvider
             defaultOptions={{

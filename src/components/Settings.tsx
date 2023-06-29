@@ -1,6 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
@@ -15,7 +16,6 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useColorScheme } from '@mui/material/styles'
 import ProfilePhoto from './ProfilePhoto'
-import ScrollArea from './ScrollArea'
 
 interface SettingsProps {
   onClose: () => void
@@ -39,7 +39,7 @@ export default function Settings({ onClose }: SettingsProps) {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <ScrollArea>
+      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         <Container sx={{ pb: 3 }}>
           <Stack alignItems="center" gap={2} sx={{ mb: 3 }}>
             <ProfilePhoto />
@@ -67,7 +67,7 @@ export default function Settings({ onClose }: SettingsProps) {
             </List>
           </Card>
         </Container>
-      </ScrollArea>
+      </Box>
     </>
   )
 }

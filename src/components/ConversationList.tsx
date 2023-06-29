@@ -14,7 +14,7 @@ export default function ConversationList({
   onSelectConversation,
 }: ConversationListProps) {
   return (
-    <List sx={{ px: 1 }}>
+    <List>
       {conversations.map((conversation) => (
         <ConversationListItem
           key={conversation.id}

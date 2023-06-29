@@ -2,13 +2,13 @@ import { useMemo, useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SearchIcon from '@mui/icons-material/Search'
 import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { IContact } from '@/interfaces'
 import ContactList from './ContactList'
 import ListSkeleton from './ListSkeleton'
-import ScrollArea from './ScrollArea'
 import SearchBar from './SearchBar'
 
 interface NewChatProps {
@@ -49,7 +49,7 @@ export default function Contacts({ loading, contacts, onSelectContact, onClose }
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            New Conversation
+            Contacts
           </Typography>
           <IconButton edge="end" onClick={handleOpenSearchBar}>
             <SearchIcon />
@@ -62,13 +62,13 @@ export default function Contacts({ loading, contacts, onSelectContact, onClose }
         onChange={setSearchQuery}
         onClose={handleCloseSearchBar}
       />
-      <ScrollArea>
+      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         {loading ? (
           <ListSkeleton />
         ) : (
           <ContactList contacts={filteredContacts} onSelectContact={onSelectContact} />
         )}
-      </ScrollArea>
+      </Box>
     </>
   )
 }

@@ -1,12 +1,30 @@
-import { Fragment, useEffect, useRef } from 'react'
+import { HTMLAttributes, forwardRef, useMemo } from 'react'
+import Chip from '@mui/material/Chip'
 import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import moment from 'moment'
+import { styled } from '@mui/material/styles'
 import Moment from 'react-moment'
+import { Components, GroupedVirtuoso } from 'react-virtuoso'
 import { IMessage } from '@/interfaces'
 import ChatMessageListItem from './ChatMessageListItem'
-import ScrollArea from './ScrollArea'
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+  backgroundColor: theme.vars.palette.background.paper,
+  backgroundImage: theme.vars.overlays[3],
+}))
+
+const components: Components = {
+  List: forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>((props, ref) => (
+    <Container ref={ref} {...props} maxWidth={false} />
+  )),
+  Group: forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+    ({ children, ...props }, ref) => (
+      <Stack ref={ref} {...props} alignItems="center" sx={{ py: 1.5 }}>
+        <StyledChip label={children} />
+      </Stack>
+    )
+  ),
+}
 
 interface ChatMessageListProps {
   messages: IMessage[]
@@ -14,88 +32,57 @@ interface ChatMessageListProps {
 }
 
 export default function ChatMessageList({ messages, onDeleteMessage }: ChatMessageListProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const { groupCounts, groups } = useMemo(() => {
+    const groupedMessages: { [key: string]: number } = {}
 
-  useEffect(() => {
-    const scrollEl = scrollRef.current
-
-    if (!scrollEl) {
-      return
+    for (const messsage of messages) {
+      const date = new Date(messsage.timestamp).toDateString()
+      const count = groupedMessages[date] ?? 0
+      groupedMessages[date] = count + 1
     }
 
-    let scrollBottom = 0
-    let previousClientHeight = scrollEl.clientHeight
-    let previousScrollHeight = scrollEl.scrollHeight
+    const groupCounts = Object.values(groupedMessages)
+    const groups = Object.keys(groupedMessages)
 
-    const handleScroll = () => {
-      if (
-        scrollEl.clientHeight !== previousClientHeight ||
-        scrollEl.scrollHeight !== previousScrollHeight
-      ) {
-        return
-      }
+    return { groupCounts, groups }
+  }, [messages])
 
-      scrollBottom = previousScrollHeight - previousClientHeight - Math.round(scrollEl.scrollTop)
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-      if (scrollBottom > 1) {
-        scrollBottom += scrollEl.scrollHeight - previousScrollHeight
-      }
-
-      previousClientHeight = scrollEl.clientHeight
-      previousScrollHeight = scrollEl.scrollHeight
-
-      scrollEl.scrollTop = previousScrollHeight - previousClientHeight - scrollBottom
-    })
-
-    resizeObserver.observe(scrollEl)
-    resizeObserver.observe(scrollEl.children[0])
-
-    scrollEl.addEventListener('scroll', handleScroll)
-
-    return () => {
-      resizeObserver.disconnect()
-      scrollEl.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+  if (messages.length === 0) {
+    return null
+  }
 
   return (
-    <ScrollArea ref={scrollRef}>
-      <Container maxWidth={false}>
-        {messages.map((message, index) => {
-          const showDate =
-            index === 0 || !moment(message.timestamp).isSame(messages[index - 1].timestamp, 'day')
+    <GroupedVirtuoso
+      groupCounts={groupCounts}
+      groupContent={(index) => {
+        return (
+          <Moment
+            calendar={{
+              sameDay: '[Today]',
+              lastDay: '[Yesterday]',
+              lastWeek: 'dddd',
+              sameElse: 'l',
+            }}
+          >
+            {groups[index]}
+          </Moment>
+        )
+      }}
+      itemContent={(index) => {
+        const message = messages[index]
 
-          return (
-            <Fragment key={message.id}>
-              {showDate && (
-                <Stack direction="row" justifyContent="center" sx={index > 0 ? { mt: 1.5 } : {}}>
-                  <Typography variant="caption" color="text.secondary">
-                    <Moment
-                      calendar={{
-                        sameDay: '[Today]',
-                        lastDay: '[Yesterday]',
-                        lastWeek: 'dddd',
-                        sameElse: 'l',
-                      }}
-                    >
-                      {message.timestamp}
-                    </Moment>
-                  </Typography>
-                </Stack>
-              )}
-              <ChatMessageListItem
-                message={message}
-                onDelete={onDeleteMessage}
-                margin={
-                  showDate || message.senderId !== messages[index - 1].senderId ? 'normal' : 'dense'
-                }
-              />
-            </Fragment>
-          )
-        })}
-      </Container>
-    </ScrollArea>
+        return (
+          <ChatMessageListItem
+            message={message}
+            onDelete={onDeleteMessage}
+            margin={message.senderId !== messages[index - 1]?.senderId ? 'normal' : 'dense'}
+          />
+        )
+      }}
+      initialTopMostItemIndex={messages.length - 1}
+      alignToBottom
+      followOutput
+      components={components}
+    />
   )
 }

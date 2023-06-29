@@ -1,9 +1,14 @@
 import { ComponentProps, ElementRef, forwardRef } from 'react'
-import Box, { BoxProps } from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
+import { keyframes, styled } from '@mui/material/styles'
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 
-const ScrollAreaViewport = styled(ScrollAreaPrimitive.Viewport)({
+const Root = styled(ScrollAreaPrimitive.Root)({
+  hight: '100%',
+  flexGrow: 1,
+  overflow: 'hidden',
+})
+
+const Viewport = styled(ScrollAreaPrimitive.Viewport)({
   width: '100%',
   height: '100%',
   '& > div': {
@@ -11,7 +16,17 @@ const ScrollAreaViewport = styled(ScrollAreaPrimitive.Viewport)({
   },
 })
 
-const ScrollAreaScrollbar = styled(ScrollAreaPrimitive.Scrollbar)({
+const fadeIn = keyframes({
+  from: { opacity: 0 },
+  to: { opacity: 1 },
+})
+
+const fadeOut = keyframes({
+  from: { opacity: 1 },
+  to: { opacity: 0 },
+})
+
+const Scrollbar = styled(ScrollAreaPrimitive.Scrollbar)(({ theme }) => ({
   display: 'flex',
   userSelect: 'none',
   touchAction: 'none',
@@ -21,12 +36,18 @@ const ScrollAreaScrollbar = styled(ScrollAreaPrimitive.Scrollbar)({
     flexDirection: 'column',
     height: 4,
   },
-})
+  '&[data-state="visible"]': {
+    animation: `${fadeIn} ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeOut}`,
+  },
+  '&[data-state="hidden"]': {
+    animation: `${fadeOut} ${theme.transitions.duration.leavingScreen}ms ${theme.transitions.easing.sharp}`,
+  },
+}))
 
-const ScrollAreaThumb = styled(ScrollAreaPrimitive.Thumb)(({ theme }) => ({
+const Thumb = styled(ScrollAreaPrimitive.Thumb)(({ theme }) => ({
   flex: 1,
-  backgroundColor: theme.vars.palette.action.disabled,
   position: 'relative',
+  backgroundColor: theme.vars.palette.action.disabled,
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -40,29 +61,27 @@ const ScrollAreaThumb = styled(ScrollAreaPrimitive.Thumb)(({ theme }) => ({
   },
 }))
 
-type ScrollAreaProps = ComponentProps<typeof ScrollAreaPrimitive.Root> & BoxProps
+type ScrollAreaProps = ComponentProps<typeof Root> & ComponentProps<typeof Viewport>
 
-const ScrollArea = forwardRef<ElementRef<typeof ScrollAreaViewport>, ScrollAreaProps>(
+const ScrollArea = forwardRef<ElementRef<typeof Viewport>, ScrollAreaProps>(
   (props, forwardedRef) => {
-    const { children, type, scrollHideDelay = 500, dir, sx, ...other } = props
+    const { children, type, scrollHideDelay = 500, dir, ...other } = props
 
     return (
-      <ScrollAreaPrimitive.Root asChild type={type} scrollHideDelay={scrollHideDelay} dir={dir}>
-        <Box sx={{ ...sx, overflow: 'hidden' }} {...other}>
-          <ScrollAreaViewport ref={forwardedRef}>{children}</ScrollAreaViewport>
-          <ScrollAreaScrollbar orientation="vertical">
-            <ScrollAreaThumb />
-          </ScrollAreaScrollbar>
-          <ScrollAreaScrollbar orientation="horizontal">
-            <ScrollAreaThumb />
-          </ScrollAreaScrollbar>
-          <ScrollAreaPrimitive.Corner />
-        </Box>
-      </ScrollAreaPrimitive.Root>
+      <Root type={type} scrollHideDelay={scrollHideDelay} dir={dir}>
+        <Viewport ref={forwardedRef} {...other}>
+          {children}
+        </Viewport>
+        <Scrollbar orientation="vertical">
+          <Thumb />
+        </Scrollbar>
+        <Scrollbar orientation="horizontal">
+          <Thumb />
+        </Scrollbar>
+        <ScrollAreaPrimitive.Corner />
+      </Root>
     )
   }
 )
-
-ScrollArea.displayName = 'ScrollArea'
 
 export default ScrollArea

@@ -1,6 +1,7 @@
 {
   "extends": ["next", "prettier"],
   "rules": {
+    "react/display-name": "off",
     "no-restricted-imports": [
       "error",
       {
