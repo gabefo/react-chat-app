@@ -7,7 +7,13 @@ import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import Image from 'next/image'
+import { styled } from '@mui/material/styles'
+
+const StyledImg = styled('img')({
+  width: '100%',
+  height: '100%',
+  objectFit: 'contain',
+})
 
 interface ImageViewerProps {
   title: string
@@ -33,14 +39,13 @@ export default function ImageViewer({ title, src }: ImageViewerProps) {
         onClick={handleOpen}
         sx={{ width: 128, height: 128, cursor: 'pointer' }}
       />
-      <Modal open={open} onClose={handleClose}>
+      <Modal data-mui-color-scheme="dark" open={open} onClose={handleClose}>
         <Box
           sx={{
             position: 'relative',
             width: '100%',
             height: '100%',
             bgcolor: 'common.black',
-            color: 'common.white',
           }}
         >
           <AppBar
@@ -51,13 +56,15 @@ export default function ImageViewer({ title, src }: ImageViewerProps) {
             }}
           >
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} sx={{ mr: 1 }}>
+              <IconButton edge="start" onClick={handleClose} sx={{ mr: 1 }}>
                 <CloseIcon />
               </IconButton>
-              <Typography variant="h6">{title}</Typography>
+              <Typography variant="h6" color="text.primary">
+                {title}
+              </Typography>
             </Toolbar>
           </AppBar>
-          {src && <Image alt={title} src={src} fill style={{ objectFit: 'contain' }} />}
+          {src && <StyledImg alt={title} src={src} />}
         </Box>
       </Modal>
     </>
