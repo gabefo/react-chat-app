@@ -24,7 +24,7 @@ function createRandomConversation(recipient: IContact): IConversation {
             read: true,
           }
         },
-        { count: faker.number.int({ min: 5, max: 20 }) }
+        { count: faker.number.int({ min: 10, max: 100 }) }
       )
       .sort((a, b) => a.timestamp.localeCompare(b.timestamp)),
     unreadCount: 0,
