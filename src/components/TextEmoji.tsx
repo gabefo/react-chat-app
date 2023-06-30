@@ -1,21 +1,38 @@
-import { Fragment } from 'react'
+import { ReactElement } from 'react'
 import Emoji from './Emoji'
 
-const emojiRegex = /(\p{Extended_Pictographic}(?:\u200d\p{Extended_Pictographic})*)/gu
+const emojiRegex = /\p{Extended_Pictographic}(?:\u200d\p{Extended_Pictographic})*/gu
+
+function renderEmojis(text: string) {
+  const result: (string | ReactElement)[] = []
+
+  let arr: RegExpExecArray | null
+  let lastIndex = 0
+
+  while ((arr = emojiRegex.exec(text)) !== null) {
+    const { index, 0: emoji } = arr
+
+    if (index !== lastIndex) {
+      result.push(text.slice(lastIndex, index))
+    }
+
+    result.push(<Emoji key={index} emoji={emoji} size={20} />)
+    lastIndex = emojiRegex.lastIndex
+  }
+
+  if (lastIndex < text.length - 1) {
+    result.push(text.slice(lastIndex))
+  }
+
+  emojiRegex.lastIndex = 0
+
+  return result
+}
 
 interface TextEmojiProps {
   children: string
-  emojiSize?: number
 }
 
-export default function TextEmoji({ children, emojiSize = 20 }: TextEmojiProps) {
-  return (
-    <>
-      {children.split(emojiRegex).map((value, index) => (
-        <Fragment key={index}>
-          {emojiRegex.test(value) ? <Emoji emoji={value} size={emojiSize} /> : value}
-        </Fragment>
-      ))}
-    </>
-  )
+export default function TextEmoji({ children }: TextEmojiProps) {
+  return renderEmojis(children)
 }
