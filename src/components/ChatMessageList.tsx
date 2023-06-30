@@ -1,4 +1,5 @@
 import { HTMLAttributes, forwardRef, useMemo } from 'react'
+import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
@@ -14,12 +15,22 @@ const StyledChip = styled(Chip)(({ theme }) => ({
 }))
 
 const components: Components = {
+  TopItemList: forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>((props, ref) => (
+    <Box ref={ref} {...props} sx={{ pointerEvents: 'none' }} />
+  )),
   List: forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>((props, ref) => (
     <Container ref={ref} {...props} maxWidth={false} />
   )),
   Group: forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     ({ children, ...props }, ref) => (
-      <Stack ref={ref} {...props} alignItems="center" sx={{ py: 1.5 }}>
+      <Stack
+        ref={ref}
+        {...props}
+        alignItems="center"
+        sx={{
+          py: 1.5,
+        }}
+      >
         <StyledChip label={children} />
       </Stack>
     )
