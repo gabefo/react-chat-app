@@ -124,7 +124,8 @@ const Content = styled('div')({
 
 const Grid = styled('div')(({ theme }) => ({
   display: 'grid',
-  grid: '44px / repeat(auto-fill, 44px)',
+  gridTemplateRows: '44px',
+  gridTemplateColumns: 'repeat(auto-fill, 44px)',
   justifyContent: 'space-between',
   padding: '2px',
   [theme.breakpoints.up('sm')]: {
