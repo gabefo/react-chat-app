@@ -1,21 +1,20 @@
 import sheet from 'emoji-datasource-apple/img/apple/sheets/32.png'
-import { EmojiType, emojisByNative } from '@/lib/emojis'
+import { emojisByNative } from '@/lib/emojis'
 
 const sheet_size = 32
 
 interface EmojiProps {
-  emoji: string | EmojiType
+  emoji: string
   size?: number
 }
 
 export default function Emoji({ emoji: emojiProp, size = sheet_size }: EmojiProps) {
-  const emoji = typeof emojiProp === 'string' ? emojisByNative[emojiProp] : emojiProp
+  const emoji = emojisByNative[emojiProp]
 
   if (!emoji) {
-    return null
+    return <>{emojiProp}</>
   }
 
-  const native = String.fromCodePoint(...emoji.unified.split('-').map((s) => parseInt(s, 16)))
   const { sheet_x, sheet_y } = emoji
 
   const ratio = size / sheet_size
@@ -26,7 +25,7 @@ export default function Emoji({ emoji: emojiProp, size = sheet_size }: EmojiProp
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-      alt={native}
+      alt={emojiProp}
       draggable={false}
       style={{
         display: 'inline-block',

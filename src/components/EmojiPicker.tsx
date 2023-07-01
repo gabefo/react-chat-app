@@ -182,7 +182,7 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
                 tabIndex={-1}
                 onClick={() => onEmojiSelect?.(native)}
               >
-                <Emoji emoji={emoji} />
+                <Emoji emoji={native} />
               </button>
             )
           }}
