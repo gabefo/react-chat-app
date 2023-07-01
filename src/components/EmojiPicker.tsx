@@ -13,7 +13,7 @@ import Tab, { TabProps } from '@mui/material/Tab'
 import Tabs, { TabsProps, tabsClasses } from '@mui/material/Tabs'
 import { styled } from '@mui/material/styles'
 import { VirtuosoGrid, VirtuosoGridHandle } from 'react-virtuoso'
-import { EmojiType, emojisByCategory, emojisByNative } from '@/lib/emojis'
+import { EmojiType, emojisByCategory, emojisByNative, fromCodePoints } from '@/lib/emojis'
 import Emoji from './Emoji'
 
 const categories = [
@@ -166,9 +166,7 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
           data={emojis}
           itemContent={(index) => {
             const emoji = emojis[index]
-            const native = String.fromCodePoint(
-              ...emoji.unified.split('-').map((s) => parseInt(s, 16))
-            )
+            const native = fromCodePoints(emoji.unified)
 
             let className = 'emoji-button'
             if (typeof emoji.skin_variations !== 'undefined') {
