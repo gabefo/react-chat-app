@@ -35,5 +35,5 @@ interface TextEmojiProps {
 }
 
 export default function TextEmoji({ children }: TextEmojiProps) {
-  return renderEmojis(children)
+  return <>{renderEmojis(children)}</>
 }
