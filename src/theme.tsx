@@ -1,4 +1,3 @@
-import { grey } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme, lighten } from '@mui/material/styles'
 import { Roboto } from 'next/font/google'
 import type {} from '@mui/material/themeCssVarsAugmentation'
@@ -15,8 +14,8 @@ const theme = extendTheme({
     light: {
       palette: {
         background: {
-          default: grey[300],
-          paper: grey[300],
+          default: '#e0e2ec',
+          paper: '#e0e2ec',
         },
       },
     },
