@@ -220,19 +220,17 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
                 className={className}
                 tabIndex={-1}
                 aria-label={native}
-                {...(hasSkinVariations
-                  ? {
-                      'aria-controls': menuAnchorEl?.id === id ? 'emoji-skins-menu' : undefined,
-                      'aria-haspopup': true,
-                      'aria-expanded': menuAnchorEl?.id === id ? true : undefined,
-                      onClick: (event) => {
-                        setActiveSkins(emoji.skin_variations)
-                        setMenuAnchorEl(event.currentTarget)
-                      },
-                    }
-                  : {
-                      onClick: () => onEmojiSelect?.(native),
-                    })}
+                onClick={() => onEmojiSelect?.(native)}
+                {...(hasSkinVariations && {
+                  'aria-controls': menuAnchorEl?.id === id ? 'emoji-skins-menu' : undefined,
+                  'aria-haspopup': true,
+                  'aria-expanded': menuAnchorEl?.id === id ? true : undefined,
+                  onContextMenu: (event) => {
+                    event.preventDefault()
+                    setMenuAnchorEl(event.currentTarget)
+                    setActiveSkins(emoji.skin_variations)
+                  },
+                })}
               >
                 <Emoji emoji={native} />
               </button>
