@@ -138,7 +138,7 @@ const theme = extendTheme({
       },
       styleOverrides: {
         root: ({ theme }) => ({
-          backgroundColor: lighten(theme.colorSchemes.light.palette.background.paper, 0.48),
+          backgroundColor: lighten(theme.colorSchemes.light.palette.background.paper, 0.56),
           borderRadius: theme.shape.borderRadius * 3,
           [theme.getColorSchemeSelector('dark')]: {
             backgroundColor: lighten(theme.colorSchemes.dark.palette.background.paper, 0.05),
