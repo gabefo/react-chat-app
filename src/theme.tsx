@@ -72,7 +72,7 @@ const theme = extendTheme({
           '&:hover': {
             backgroundColor: `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`,
           },
-          '&.has-dropdown::after': {
+          '&.has-skins::after': {
             content: '""',
             position: 'absolute',
             bottom: -2,

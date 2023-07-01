@@ -1,4 +1,12 @@
-import { HTMLAttributes, SyntheticEvent, forwardRef, useCallback, useRef, useState } from 'react'
+import {
+  HTMLAttributes,
+  MouseEvent,
+  SyntheticEvent,
+  forwardRef,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
@@ -9,6 +17,8 @@ import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects'
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople'
 import EmojiSymbolsIcon from '@mui/icons-material/EmojiSymbols'
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation'
+import Menu, { menuClasses } from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import Tab, { TabProps } from '@mui/material/Tab'
 import Tabs, { TabsProps, tabsClasses } from '@mui/material/Tabs'
 import { styled } from '@mui/material/styles'
@@ -117,6 +127,19 @@ const StyledTab = styled((props: TabProps) => <Tab disableRipple {...props} />)(
   },
 }))
 
+const StyledMenu = styled(Menu)(({ theme }) => ({
+  [`& .${menuClasses.list}`]: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: theme.spacing(0.5),
+  },
+}))
+
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  padding: theme.spacing(0.75),
+  borderRadius: theme.vars.shape.borderRadius,
+}))
+
 const Content = styled('div')({
   flexGrow: 1,
   overflow: 'hidden',
@@ -144,14 +167,22 @@ interface EmojiPickerProps {
 }
 
 export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
-  const [currentTab, setCurrentTab] = useState(0)
   const virtuosoRef = useRef<VirtuosoGridHandle>(null)
+  const [currentTab, setCurrentTab] = useState(0)
+  const [activeSkins, setActiveSkins] = useState<EmojiType['skin_variations'] | null>(null)
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
+  const menuOpen = menuAnchorEl !== null
+
   const emojis = categories[currentTab].emojis
 
   const handleTabChange = useCallback((_event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue)
     virtuosoRef.current?.scrollToIndex(0)
   }, [])
+
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null)
+  }
 
   return (
     <Root>
@@ -164,21 +195,36 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
         <VirtuosoGrid
           ref={virtuosoRef}
           data={emojis}
-          itemContent={(index) => {
-            const emoji = emojis[index]
+          itemContent={(_, emoji) => {
             const native = fromCodePoints(emoji.unified)
+            const hasSkinVariations = typeof emoji.skin_variations !== 'undefined'
+
+            const id = `emoji-button-${emoji.unified}`
 
             let className = 'emoji-button'
-            if (typeof emoji.skin_variations !== 'undefined') {
-              className += ' has-dropdown'
+            if (hasSkinVariations) {
+              className += ' has-skins'
             }
 
             return (
               <button
+                id={id}
                 className={className}
-                aria-label={native}
                 tabIndex={-1}
-                onClick={() => onEmojiSelect?.(native)}
+                aria-label={native}
+                {...(hasSkinVariations
+                  ? {
+                      'aria-controls': menuAnchorEl?.id === id ? 'emoji-skins-menu' : undefined,
+                      'aria-haspopup': true,
+                      'aria-expanded': menuAnchorEl?.id === id ? true : undefined,
+                      onClick: (event) => {
+                        setActiveSkins(emoji.skin_variations)
+                        setMenuAnchorEl(event.currentTarget)
+                      },
+                    }
+                  : {
+                      onClick: () => onEmojiSelect?.(native),
+                    })}
               >
                 <Emoji emoji={native} />
               </button>
@@ -187,6 +233,33 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
           components={components}
         />
       </Content>
+      <StyledMenu
+        id="emoji-skins-menu"
+        anchorEl={menuAnchorEl}
+        open={menuOpen}
+        onClose={handleCloseMenu}
+        MenuListProps={{
+          'aria-labelledby': menuOpen ? menuAnchorEl.id : undefined,
+        }}
+      >
+        {activeSkins
+          ? Object.values(activeSkins).map((skin) => {
+              const native = fromCodePoints(skin.unified)
+
+              return (
+                <StyledMenuItem
+                  key={skin.unified}
+                  onClick={() => {
+                    onEmojiSelect?.(native)
+                    handleCloseMenu()
+                  }}
+                >
+                  <Emoji emoji={native} />
+                </StyledMenuItem>
+              )
+            })
+          : null}
+      </StyledMenu>
     </Root>
   )
 }
