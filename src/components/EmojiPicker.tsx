@@ -1,12 +1,4 @@
-import {
-  HTMLAttributes,
-  MouseEvent,
-  SyntheticEvent,
-  forwardRef,
-  useCallback,
-  useRef,
-  useState,
-} from 'react'
+import { HTMLAttributes, SyntheticEvent, forwardRef, useCallback, useRef, useState } from 'react'
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
@@ -17,7 +9,7 @@ import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects'
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople'
 import EmojiSymbolsIcon from '@mui/icons-material/EmojiSymbols'
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation'
-import Menu, { menuClasses } from '@mui/material/Menu'
+import Menu, { MenuProps, menuClasses } from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tab, { TabProps } from '@mui/material/Tab'
 import Tabs, { TabsProps, tabsClasses } from '@mui/material/Tabs'
@@ -127,11 +119,24 @@ const StyledTab = styled((props: TabProps) => <Tab disableRipple {...props} />)(
   },
 }))
 
-const StyledMenu = styled(Menu)(({ theme }) => ({
+const StyledMenu = styled((props: MenuProps) => (
+  <Menu
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
   [`& .${menuClasses.list}`]: {
     display: 'flex',
     flexWrap: 'wrap',
     padding: theme.spacing(0.5),
+    maxWidth: 272,
   },
 }))
 
