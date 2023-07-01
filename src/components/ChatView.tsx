@@ -218,7 +218,9 @@ export default function ChatView({ conversation, onClose }: ChatViewProps) {
           </Toolbar>
         </AppBar>
         <Box sx={{ flexGrow: 1 }}>
-          <ChatMessageList messages={messages} onDeleteMessage={handleDeleteMessage} />
+          {messages.length > 0 && (
+            <ChatMessageList messages={messages} onDeleteMessage={handleDeleteMessage} />
+          )}
         </Box>
         <ChatInput
           onSend={({ type, content }) => {

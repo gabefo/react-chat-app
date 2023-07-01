@@ -58,10 +58,6 @@ export default function ChatMessageList({ messages, onDeleteMessage }: ChatMessa
     return { groupCounts, groups }
   }, [messages])
 
-  if (messages.length === 0) {
-    return null
-  }
-
   return (
     <GroupedVirtuoso
       groupCounts={groupCounts}
