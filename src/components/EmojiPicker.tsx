@@ -143,6 +143,9 @@ const StyledMenu = styled((props: MenuProps) => (
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   padding: theme.spacing(0.75),
   borderRadius: theme.vars.shape.borderRadius,
+  '@media all': {
+    minHeight: 'auto',
+  },
 }))
 
 const Content = styled('div')({
