@@ -86,9 +86,11 @@ export default function ChatMessageListItem({
             <MenuItem
               onClick={() => {
                 popupState.close()
-                window.navigator.clipboard
-                  .writeText(message.content)
-                  .catch((error) => console.error(error))
+                try {
+                  window.navigator.clipboard.writeText(message.content)
+                } catch (error) {
+                  console.error(error)
+                }
               }}
             >
               Copy text
