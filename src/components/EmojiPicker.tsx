@@ -152,12 +152,11 @@ const Content = styled('div')({
 
 const Grid = styled('div')(({ theme }) => ({
   display: 'grid',
-  gridTemplateRows: '44px',
-  gridTemplateColumns: 'repeat(auto-fill, 44px)',
+  gridTemplateRows: '48px',
+  gridTemplateColumns: 'repeat(auto-fill, 48px)',
   justifyContent: 'space-between',
-  padding: '2px',
   [theme.breakpoints.up('sm')]: {
-    padding: '10px',
+    padding: theme.spacing(1),
   },
 }))
 
