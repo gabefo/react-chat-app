@@ -1,4 +1,12 @@
-import { ChangeEvent, KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react'
+import {
+  ChangeEvent,
+  FocusEvent,
+  KeyboardEvent,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined'
@@ -51,6 +59,19 @@ export default function ChatInput({ onSend }: ChatInputProps) {
 
   const handleChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value)
+  }, [])
+
+  const handleBlur = useCallback((event: FocusEvent<HTMLTextAreaElement>) => {
+    const { relatedTarget } = event
+
+    if (
+      relatedTarget &&
+      (relatedTarget.tagName === 'INPUT' || relatedTarget.tagName === 'TEXTAREA')
+    ) {
+      return
+    }
+
+    event.currentTarget.focus()
   }, [])
 
   const handleSend = useCallback(() => {
@@ -124,6 +145,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
                 value={message}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
                 placeholder="Text message"
               />
               <input

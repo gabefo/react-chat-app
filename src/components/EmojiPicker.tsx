@@ -192,12 +192,7 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   }
 
   return (
-    <Root
-      onPointerDown={(event) => {
-        // prevent blur
-        event.preventDefault()
-      }}
-    >
+    <Root>
       <StyledTabs value={currentTab} onChange={handleTabChange}>
         {categories.map(({ id, title, Icon }) => (
           <StyledTab key={id} icon={<Icon fontSize="small" />} aria-label={title} />
