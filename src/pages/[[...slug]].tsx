@@ -92,12 +92,12 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const getContacts = async () => {
-      const mock = await import('@/_mock')
+      const mock = await import('@/data')
       dispatch(contactsSlice.actions.onLoad(mock.contacts))
     }
 
     const getConversations = async () => {
-      const mock = await import('@/_mock')
+      const mock = await import('@/data')
       dispatch(conversationsSlice.actions.onLoad(mock.conversations))
     }
 
