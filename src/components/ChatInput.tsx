@@ -41,23 +41,16 @@ interface ChatInputProps {
 }
 
 export default function ChatInput({ onSend }: ChatInputProps) {
-  const [message, setMessage] = useState('')
-  const isEmpty = useMemo(() => message.trim().length === 0, [message])
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [message, setMessage] = useState('')
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const { recordingState, recordingTime, startRecording, stopRecording } = useVoiceRecorder()
 
-  const toggleEmojiPicker = useCallback(() => {
-    setShowEmojiPicker((prev) => !prev)
-  }, [])
-
-  const handleEmojiSelect = useCallback((emoji: string) => {
-    setMessage((value) => value + emoji)
-  }, [])
+  const isEmpty = useMemo(() => message.trim().length === 0, [message])
 
   const handleChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = event.target
-    setMessage(value)
+    setMessage(event.target.value)
   }, [])
 
   const handleSend = useCallback(() => {
@@ -79,6 +72,22 @@ export default function ChatInput({ onSend }: ChatInputProps) {
     },
     [handleSend]
   )
+
+  const toggleEmojiPicker = useCallback(() => {
+    setShowEmojiPicker((prev) => !prev)
+  }, [])
+
+  const handleEmojiSelect = useCallback((emoji: string) => {
+    const input = inputRef.current
+
+    if (!input) {
+      return
+    }
+
+    input.focus()
+    input.setRangeText(emoji, input.selectionStart, input.selectionEnd, 'end')
+    setMessage(input.value)
+  }, [])
 
   const handleAttach = useCallback(() => {
     fileInputRef.current?.click()
@@ -108,6 +117,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
                 <AddPhotoAlternateOutlinedIcon />
               </IconButton>
               <StyledInput
+                inputRef={inputRef}
                 autoFocus
                 multiline
                 maxRows={4}
