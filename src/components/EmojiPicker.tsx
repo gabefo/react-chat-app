@@ -132,6 +132,9 @@ const StyledMenu = styled((props: MenuProps) => (
     {...props}
   />
 ))(({ theme }) => ({
+  [`& .${menuClasses.paper}`]: {
+    borderRadius: theme.shape.borderRadius * 2,
+  },
   [`& .${menuClasses.list}`]: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -174,7 +177,7 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   const virtuosoRef = useRef<VirtuosoGridHandle>(null)
   const [currentTab, setCurrentTab] = useState(0)
   const [activeEmoji, setActiveEmoji] = useState<EmojiType | null>(null)
-  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLButtonElement | null>(null)
   const menuOpen = menuAnchorEl !== null
 
   const emojis = categories[currentTab].emojis
