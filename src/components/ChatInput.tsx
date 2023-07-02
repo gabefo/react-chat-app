@@ -62,7 +62,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
   }, [])
 
   const handleBlur = useCallback((event: FocusEvent<HTMLTextAreaElement>) => {
-    const { relatedTarget } = event
+    const { target, relatedTarget } = event
 
     if (
       relatedTarget &&
@@ -71,7 +71,9 @@ export default function ChatInput({ onSend }: ChatInputProps) {
       return
     }
 
-    event.currentTarget.focus()
+    window.setTimeout(() => {
+      target.focus()
+    }, 10)
   }, [])
 
   const handleSend = useCallback(() => {
