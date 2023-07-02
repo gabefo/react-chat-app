@@ -1,14 +1,14 @@
-import sheet from 'emoji-datasource-apple/img/apple/sheets/32.png'
+import sheet from 'emoji-datasource-apple/img/apple/sheets/64.png'
 import { emojisByNative } from '@/lib/emojis'
 
-const sheet_size = 32
+const sheet_size = 64
 
 interface EmojiProps {
   emoji: string
   size?: number
 }
 
-export default function Emoji({ emoji: emojiProp, size = sheet_size }: EmojiProps) {
+export default function Emoji({ emoji: emojiProp, size = 32 }: EmojiProps) {
   const emoji = emojisByNative[emojiProp]
 
   if (!emoji) {
