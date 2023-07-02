@@ -136,16 +136,13 @@ const StyledMenu = styled((props: MenuProps) => (
     display: 'flex',
     flexWrap: 'wrap',
     padding: theme.spacing(0.5),
-    maxWidth: 272,
+    maxWidth: 296,
   },
 }))
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-  padding: theme.spacing(0.75),
+  padding: theme.spacing(1),
   borderRadius: theme.vars.shape.borderRadius,
-  '@media all': {
-    minHeight: 'auto',
-  },
 }))
 
 const Content = styled('div')({
@@ -177,7 +174,7 @@ interface EmojiPickerProps {
 export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   const virtuosoRef = useRef<VirtuosoGridHandle>(null)
   const [currentTab, setCurrentTab] = useState(0)
-  const [activeSkins, setActiveSkins] = useState<EmojiType['skin_variations'] | null>(null)
+  const [activeEmoji, setActiveEmoji] = useState<EmojiType | null>(null)
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
   const menuOpen = menuAnchorEl !== null
 
@@ -228,7 +225,7 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
                   onContextMenu: (event) => {
                     event.preventDefault()
                     setMenuAnchorEl(event.currentTarget)
-                    setActiveSkins(emoji.skin_variations)
+                    setActiveEmoji(emoji)
                   },
                 })}
               >
@@ -248,8 +245,8 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
           'aria-labelledby': menuOpen ? menuAnchorEl.id : undefined,
         }}
       >
-        {activeSkins
-          ? Object.values(activeSkins).map((skin) => {
+        {activeEmoji && activeEmoji.skin_variations
+          ? [activeEmoji, ...Object.values(activeEmoji.skin_variations)].map((skin) => {
               const native = fromCodePoints(skin.unified)
 
               return (
