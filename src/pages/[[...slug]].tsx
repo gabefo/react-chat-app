@@ -7,8 +7,8 @@ import { styled } from '@mui/material/styles'
 import { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import Chats from '@/components/Chats'
 import Contacts from '@/components/Contacts'
+import Conversations from '@/components/Conversations'
 import Intro from '@/components/Intro'
 import Settings from '@/components/Settings'
 import Slide from '@/components/Slide'
@@ -136,7 +136,7 @@ const Home: NextPage = () => {
     <Root>
       <TitleAndMetaTags title={activeConversation?.recipient.displayName} />
       <Drawer variant="permanent">
-        <Chats
+        <Conversations
           loading={conversationsLoading}
           conversations={conversations}
           activeConversationId={activeConversation?.id}
