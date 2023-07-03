@@ -10,6 +10,7 @@ import { IContact } from '@/interfaces'
 import ContactList from './ContactList'
 import ListSkeleton from './ListSkeleton'
 import SearchBar from './SearchBar'
+import SearchNoResults from './SearchNoResults'
 
 interface NewChatProps {
   loading: boolean
@@ -65,9 +66,11 @@ export default function Contacts({ loading, contacts, onSelectContact, onClose }
       <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         {loading ? (
           <ListSkeleton />
-        ) : (
+        ) : filteredContacts.length > 0 ? (
           <ContactList contacts={filteredContacts} onSelectContact={onSelectContact} />
-        )}
+        ) : searchQuery !== '' ? (
+          <SearchNoResults />
+        ) : null}
       </Box>
     </>
   )
