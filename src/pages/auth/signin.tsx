@@ -11,11 +11,13 @@ import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
-import { NextPage } from 'next'
+import { GetServerSidePropsContext, NextPage } from 'next'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
+import { getServerSession } from 'next-auth/next'
 import { signIn } from 'next-auth/react'
 import TitleAndMetaTags from '@/components/TitleAndMetaTags'
+import { authOptions } from '../api/auth/[...nextauth]'
 
 const Root = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -135,3 +137,20 @@ const SignInPage: NextPage = () => {
 }
 
 export default SignInPage
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions)
+
+  if (session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {},
+  }
+}
