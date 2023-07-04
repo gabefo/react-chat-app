@@ -1,4 +1,5 @@
-import { FormEvent, MouseEvent, useState } from 'react'
+import { MouseEvent, useState } from 'react'
+import { yupResolver } from '@hookform/resolvers/yup'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -16,6 +17,8 @@ import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { getServerSession } from 'next-auth/next'
 import { signIn } from 'next-auth/react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import * as yup from 'yup'
 import TitleAndMetaTags from '@/components/TitleAndMetaTags'
 import { authOptions } from '../api/auth/[...nextauth]'
 
@@ -31,12 +34,27 @@ const Root = styled('div')(({ theme }) => ({
   },
 }))
 
+const schema = yup
+  .object({
+    username: yup.string().required('Enter a username'),
+    password: yup.string().required('Enter a password'),
+  })
+  .required()
+
+type FormData = yup.InferType<typeof schema>
+
 const SignInPage: NextPage = () => {
   const { push } = useRouter()
-
+  const {
+    register,
+    handleSubmit,
+    setError,
+    resetField,
+    formState: { isSubmitting, errors },
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  })
   const [showPassword, setShowPassword] = useState(false)
-  const [isValidating, setIsValidating] = useState(false)
-  const [error, setError] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
@@ -44,23 +62,20 @@ const SignInPage: NextPage = () => {
     event.preventDefault()
   }
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    setIsValidating(true)
-
-    const data = new FormData(event.currentTarget)
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     const response = await signIn('credentials', {
+      ...data,
       redirect: false,
       callbackUrl: '/',
-      username: data.get('username'),
-      password: data.get('password'),
     })
 
-    setIsValidating(false)
-
     if (!response || !response.ok) {
-      setError(true)
+      resetField('password')
+      setError(
+        'password',
+        { type: 'validate', message: 'Invalid username or password' },
+        { shouldFocus: true }
+      )
       return
     }
 
@@ -71,7 +86,7 @@ const SignInPage: NextPage = () => {
     <Root data-mui-color-scheme="light">
       <TitleAndMetaTags title="Sign in" />
       <Container maxWidth="xs" disableGutters>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ p: 3 }}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 3 }}>
           <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 3 }}>
             Sign in
           </Typography>
@@ -79,23 +94,23 @@ const SignInPage: NextPage = () => {
             Username: <strong>demo</strong> / Password: <strong>demo1234</strong>
           </Alert>
           <TextField
+            {...register('username')}
             margin="normal"
             fullWidth
-            error={error}
-            id="username"
+            error={Boolean(errors.username)}
+            helperText={errors.username?.message}
             label="Username"
-            name="username"
             autoComplete="username"
             autoFocus
           />
           <TextField
+            {...register('password')}
             margin="normal"
             fullWidth
-            name="password"
             label="Password"
             type={showPassword ? 'text' : 'password'}
-            error={error}
-            id="password"
+            error={Boolean(errors.password)}
+            helperText={errors.password?.message}
             autoComplete="current-password"
             InputProps={{
               endAdornment: (
@@ -118,7 +133,7 @@ const SignInPage: NextPage = () => {
           <LoadingButton
             type="submit"
             fullWidth
-            loading={isValidating}
+            loading={isSubmitting}
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
