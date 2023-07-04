@@ -112,7 +112,7 @@ const SignInPage: NextPage = () => {
               ),
             }}
           />
-          <Link href="#" variant="body2" underline="none">
+          <Link component={NextLink} href="/auth/reset-password" variant="body2" underline="none">
             Forgot password?
           </Link>
           <LoadingButton
