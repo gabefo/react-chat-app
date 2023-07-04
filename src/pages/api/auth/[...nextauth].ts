@@ -11,7 +11,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         if (!credentials || !credentials.username || !credentials.password) {
-          throw new Error('Missing credentials')
+          return null
         }
 
         const user =
@@ -19,8 +19,12 @@ export const authOptions: NextAuthOptions = {
             ? { id: '1', username: 'demo', password: 'demo1234' }
             : null
 
-        if (!user || user.password !== credentials.password) {
-          throw new Error('Invalid username or password')
+        if (!user) {
+          return null
+        }
+
+        if (user.password !== credentials.password) {
+          return null
         }
 
         const { password: _, ...userWithoutPassword } = user
