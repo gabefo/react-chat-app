@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { NextPage } from 'next'
+import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { signIn } from 'next-auth/react'
 import TitleAndMetaTags from '@/components/TitleAndMetaTags'
@@ -21,9 +22,8 @@ const Root = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   position: 'relative',
   minHeight: '100%',
-  [theme.getColorSchemeSelector('light')]: {
-    backgroundColor: theme.vars.palette.common.white,
-  },
+  backgroundColor: theme.vars.palette.common.white,
+  color: theme.vars.palette.text.primary,
   [theme.breakpoints.up('sm')]: {
     justifyContent: 'center',
   },
@@ -66,7 +66,7 @@ const SignInPage: NextPage = () => {
   }
 
   return (
-    <Root>
+    <Root data-mui-color-scheme="light">
       <TitleAndMetaTags title="Sign in" />
       <Container maxWidth="xs" disableGutters>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ p: 3 }}>
@@ -124,7 +124,7 @@ const SignInPage: NextPage = () => {
           </LoadingButton>
           <Typography variant="body2" sx={{ textAlign: 'center' }}>
             {"Don't have an account? "}
-            <Link href="#" variant="body2" underline="none">
+            <Link component={NextLink} href="/auth/signup" variant="body2" underline="none">
               Sign Up
             </Link>
           </Typography>
