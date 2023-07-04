@@ -11,7 +11,6 @@ import Contacts from '@/components/Contacts'
 import Conversations from '@/components/Conversations'
 import Intro from '@/components/Intro'
 import Settings from '@/components/Settings'
-import Slide from '@/components/Slide'
 import TitleAndMetaTags from '@/components/TitleAndMetaTags'
 import { IConversation, IContact } from '@/interfaces'
 import { conversationsSlice, selectConversations, useDispatch, useSelector } from '@/lib/redux'
@@ -152,17 +151,14 @@ const Home: NextPage = () => {
             <ChatIcon />
           </Fab>
         </Zoom>
-        <Slide in={panel === 'settings'}>
-          <Settings onClose={handleClosePanel} />
-        </Slide>
-        <Slide in={panel === 'contacts'}>
-          <Contacts
-            loading={contactsLoading}
-            contacts={contacts}
-            onSelectContact={handleSelectContact}
-            onClose={handleClosePanel}
-          />
-        </Slide>
+        <Settings open={panel === 'settings'} onClose={handleClosePanel} />
+        <Contacts
+          open={panel === 'contacts'}
+          loading={contactsLoading}
+          contacts={contacts}
+          onSelectContact={handleSelectContact}
+          onClose={handleClosePanel}
+        />
       </Drawer>
       {activeConversation ? (
         <ChatView
