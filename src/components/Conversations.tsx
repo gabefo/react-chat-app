@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
+import { signOut } from 'next-auth/react'
 import { IConversation } from '@/interfaces'
 import ConversationList from './ConversationList'
 import EmptyConversations from './EmptyConversations'
@@ -71,7 +72,14 @@ export default function Conversations({
             >
               Settings
             </MenuItem>
-            <MenuItem onClick={popupState.close}>Log out</MenuItem>
+            <MenuItem
+              onClick={() => {
+                popupState.close()
+                signOut()
+              }}
+            >
+              Log out
+            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
