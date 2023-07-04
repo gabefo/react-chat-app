@@ -118,17 +118,17 @@ const theme = extendTheme({
           borderRadius: '9999px',
           textTransform: 'none',
         },
-        sizeMedium: {
-          lineHeight: '24px',
-        },
+        contained: ({ theme }) => ({
+          boxShadow: theme.vars.shadows[0],
+        }),
         textSizeMedium: {
-          padding: '8px 12px',
+          padding: '10px 12px',
         },
         containedSizeMedium: {
-          padding: '8px 24px',
+          padding: '10px 24px',
         },
         outlinedSizeMedium: {
-          padding: '7px 23px',
+          padding: '9px 23px',
         },
       },
     },
