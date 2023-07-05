@@ -12,7 +12,7 @@ const Root = styled('div')(({ theme }) => ({
   textAlign: 'center',
 }))
 
-export default function EmptyConversations() {
+export default function ContactsPlaceholder() {
   return (
     <Root>
       <Typography variant="subtitle1" color="text.secondary">

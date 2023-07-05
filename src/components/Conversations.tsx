@@ -12,7 +12,7 @@ import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/ho
 import { signOut } from 'next-auth/react'
 import { IConversation } from '@/interfaces'
 import ConversationList from './ConversationList'
-import EmptyConversations from './EmptyConversations'
+import ConversationsPlaceholder from './ConversationsPlaceholder'
 import ListSkeleton from './ListSkeleton'
 import SearchBar from './SearchBar'
 
@@ -99,7 +99,7 @@ export default function Conversations({
             onSelectConversation={onSelectConversation}
           />
         ) : (
-          <EmptyConversations />
+          <ConversationsPlaceholder />
         )}
       </Box>
     </>

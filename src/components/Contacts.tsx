@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { IContact } from '@/interfaces'
 import ContactList from './ContactList'
-import EmptyContacts from './EmptyContacts'
+import ContactsPlaceholder from './ContactsPlaceholder'
 import ListSkeleton from './ListSkeleton'
 import SearchBar from './SearchBar'
 import SearchNoResults from './SearchNoResults'
@@ -94,7 +94,7 @@ export default function Contacts({
           ) : searchQuery !== '' ? (
             <SearchNoResults />
           ) : (
-            <EmptyContacts />
+            <ContactsPlaceholder />
           )}
         </Box>
       </Root>
