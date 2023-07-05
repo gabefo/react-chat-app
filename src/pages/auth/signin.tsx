@@ -36,7 +36,7 @@ const Root = styled('div')(({ theme }) => ({
 
 const schema = yup
   .object({
-    username: yup.string().required('Enter a username'),
+    username: yup.string().trim().required('Enter a username'),
     password: yup.string().required('Enter a password'),
   })
   .required()
@@ -70,12 +70,8 @@ const SignInPage: NextPage = () => {
     })
 
     if (!response || !response.ok) {
+      setError('root.serverError', { type: '401' })
       resetField('password')
-      setError(
-        'password',
-        { type: 'validate', message: 'Invalid username or password' },
-        { shouldFocus: true }
-      )
       return
     }
 
@@ -93,6 +89,11 @@ const SignInPage: NextPage = () => {
           <Alert severity="info">
             Username: <strong>demo</strong> / Password: <strong>demo1234</strong>
           </Alert>
+          {errors.root ? (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              Invalid username or password
+            </Alert>
+          ) : null}
           <TextField
             {...register('username')}
             margin="normal"
