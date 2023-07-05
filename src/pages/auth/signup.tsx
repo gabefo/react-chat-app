@@ -1,4 +1,5 @@
 import { FormEvent, MouseEvent, useState } from 'react'
+import { yupResolver } from '@hookform/resolvers/yup'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -13,6 +14,8 @@ import { styled } from '@mui/material/styles'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import NextLink from 'next/link'
 import { getServerSession } from 'next-auth/next'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import * as yup from 'yup'
 import TitleAndMetaTags from '@/components/TitleAndMetaTags'
 import { authOptions } from '../api/auth/[...nextauth]'
 
@@ -28,9 +31,40 @@ const Root = styled('div')(({ theme }) => ({
   },
 }))
 
+const schema = yup
+  .object({
+    username: yup
+      .string()
+      .required('Enter a username')
+      .min(6, 'Sorry, your username must be between 6 and 30 characters long.')
+      .max(30, 'Sorry, your username must be between 6 and 30 characters long.')
+      .matches(
+        /^[A-Za-z0-9.]{6,30}$/,
+        'Sorry, only letters (a-z), numbers (0-9), and periods (.) are allowed.'
+      ),
+    email: yup.string().required('Enter an email').email('Invalid email'),
+    password: yup
+      .string()
+      .required('Enter a password')
+      .min(8, 'Use 8 characters or more for your password')
+      .matches(
+        /(?=.*[0-9])(?=.*[A-Za-z])(?=.*[~`!@#$%^&*()\-+={}\[\]|\\:;"'<>,.?/_₹])/,
+        'Please choose a stronger password. Try a mix of letters, numbers, and symbols.'
+      ),
+  })
+  .required()
+
+type FormData = yup.InferType<typeof schema>
+
 const SignUpPage: NextPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  })
   const [showPassword, setShowPassword] = useState(false)
-  const [isValidating, setIsValidating] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
@@ -38,35 +72,43 @@ const SignUpPage: NextPage = () => {
     event.preventDefault()
   }
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-  }
+  const onSubmit: SubmitHandler<FormData> = async (data) => {}
 
   return (
     <Root data-mui-color-scheme="light">
       <TitleAndMetaTags title="Sign up" />
       <Container maxWidth="xs" disableGutters>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ p: 3 }}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 3 }}>
           <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 3 }}>
             Sign up
           </Typography>
           <TextField
+            {...register('username')}
             margin="normal"
             fullWidth
-            id="username"
+            error={Boolean(errors.username)}
+            helperText={errors.username?.message}
             label="Username"
-            name="username"
+            autoComplete="username"
             autoFocus
           />
-          <TextField margin="normal" fullWidth id="email" label="Email" name="email" />
           <TextField
+            {...register('email')}
             margin="normal"
             fullWidth
-            name="password"
+            error={Boolean(errors.email)}
+            helperText={errors.email?.message}
+            label="Email"
+            autoComplete="email"
+          />
+          <TextField
+            {...register('password')}
+            margin="normal"
+            fullWidth
             label="Password"
             type={showPassword ? 'text' : 'password'}
-            id="password"
-            autoComplete="current-password"
+            error={Boolean(errors.password)}
+            autoComplete="off"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -85,10 +127,11 @@ const SignUpPage: NextPage = () => {
           <TextField
             margin="normal"
             fullWidth
-            name="confirm-password"
             label="Confirm password"
             type={showPassword ? 'text' : 'password'}
-            id="confirm-password"
+            error={Boolean(errors.password)}
+            helperText={errors.password?.message}
+            autoComplete="off"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -107,7 +150,7 @@ const SignUpPage: NextPage = () => {
           <LoadingButton
             type="submit"
             fullWidth
-            loading={isValidating}
+            loading={isSubmitting}
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
