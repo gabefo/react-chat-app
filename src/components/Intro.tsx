@@ -441,7 +441,7 @@ export default function Intro() {
         </g>
       </svg>
       <Typography variant="h5" sx={{ width: '80%', maxWidth: 460, textAlign: 'center' }}>
-        Start a new conversation
+        Connect with your friends
       </Typography>
     </Root>
   )
