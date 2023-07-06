@@ -4,10 +4,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Alert from '@mui/material/Alert'
+import Backdrop from '@mui/material/Backdrop'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
+import LinearProgress from '@mui/material/LinearProgress'
 import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -50,7 +52,7 @@ const SignInPage: NextPage = () => {
     handleSubmit,
     setError,
     resetField,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting, isSubmitSuccessful, errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   })
@@ -83,14 +85,14 @@ const SignInPage: NextPage = () => {
       <TitleAndMetaTags title="Sign in" />
       <Container maxWidth="xs" disableGutters>
         <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 3 }}>
-          <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 3 }}>
+          <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 1 }}>
             Sign in
           </Typography>
-          <Alert severity="info">
+          <Alert severity="info" sx={{ mt: 2, mb: 1 }}>
             Username: <strong>demo</strong> / Password: <strong>demo1234</strong>
           </Alert>
           {errors.root ? (
-            <Alert severity="error" sx={{ mt: 2 }}>
+            <Alert severity="error" sx={{ mt: 2, mb: 1 }}>
               Invalid username or password
             </Alert>
           ) : null}
@@ -134,7 +136,7 @@ const SignInPage: NextPage = () => {
           <LoadingButton
             type="submit"
             fullWidth
-            loading={isSubmitting}
+            loading={isSubmitting || isSubmitSuccessful}
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
@@ -148,6 +150,17 @@ const SignInPage: NextPage = () => {
           </Typography>
         </Box>
       </Container>
+      <Backdrop
+        open={isSubmitting || isSubmitSuccessful}
+        sx={{
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          bgcolor: 'rgba(255 255 255 / 0.5)',
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
+        <LinearProgress color="primary" sx={{ width: '100%', bgcolor: 'transparent' }} />
+      </Backdrop>
     </Root>
   )
 }
