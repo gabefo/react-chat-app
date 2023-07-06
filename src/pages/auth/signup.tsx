@@ -176,7 +176,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (session) {
     return {
       redirect: {
-        destination: '/',
+        destination: '/conversations',
         permanent: false,
       },
     }

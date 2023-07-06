@@ -46,7 +46,7 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>
 
 const SignInPage: NextPage = () => {
-  const { push } = useRouter()
+  const { query, push } = useRouter()
   const {
     register,
     handleSubmit,
@@ -68,7 +68,7 @@ const SignInPage: NextPage = () => {
     const response = await signIn('credentials', {
       ...data,
       redirect: false,
-      callbackUrl: '/',
+      callbackUrl: Array.isArray(query.callbackUrl) ? query.callbackUrl[0] : query.callbackUrl,
     })
 
     if (!response || !response.ok) {
@@ -77,7 +77,7 @@ const SignInPage: NextPage = () => {
       return
     }
 
-    push(response.url as string)
+    push(response.url || '/conversations')
   }
 
   return (
@@ -173,7 +173,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (session) {
     return {
       redirect: {
-        destination: '/',
+        destination: '/conversations',
         permanent: false,
       },
     }
