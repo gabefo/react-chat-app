@@ -1,7 +1,5 @@
 # Next.js Chat
 
-[Demo](https://youtext.vercel.app/)
-
 A Next.js chat template featuring:
 
 - Text and voice messages
@@ -12,6 +10,14 @@ A Next.js chat template featuring:
 - React Virtuoso for virtualization
 - Built with Material UI
 - Light/dark mode
+
+## Demo
+
+Visit the [demo](https://youtext.vercel.app/)
+
+![Conversations](https://github.com/gabefo/react-chat-app/assets/66435643/d902f83a-9524-420a-a4d2-99ab79cef948)
+
+![Contacts](https://github.com/gabefo/react-chat-app/assets/66435643/88bac07d-515b-4a01-b652-2e95bcf3922c)
 
 ## Running locally
 
