@@ -23,8 +23,4 @@ To run your site locally, use:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
